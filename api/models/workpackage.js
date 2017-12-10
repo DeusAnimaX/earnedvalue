@@ -1,0 +1,18 @@
+// get an instance of mongoose and mongoose.Schema
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+// set up a mongoose model and pass it using module.exports
+module.exports = mongoose.model('WorkPackage', new Schema({
+    id: String,
+    name: String,
+    idSprint: String,
+    description: String,
+    hours: String,
+    hourCost: String,
+    extraCost: String,
+    actualHours:String,
+    actualHourCost: String,
+    actualExtraCost: String
+
+}));

@@ -1,0 +1,208 @@
+<button class="btn btn-default" style="margin:5px" data-toggle="modal" data-target="#myModal">Crear proyecto</button>
+
+<legend>{{title}}</legend>
+
+<div *ngFor="let sprint of sprints" class="panel panel-primary">
+  <div class="panel-heading">
+    <label>{{sprint.name}}</label>
+    <span class="btn fa fa-minus pull-right"></span>
+  </div>
+
+  <div *ngFor="let workPackage of sprint.workPackages" class="panel-body">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{workPackage.name}}</div>
+      <div class="panel-body">
+        <span>Descripcion: {{workPackage.description}}.</span>
+        <div class = "row">
+          <div class= "col-md-2">
+            <p><b>Horas: {{workPackage.hours}}</b></p>
+          </div>
+          <div class= "col-md-2">
+            <p><b>Costo total planeado: &#36; {{+workPackage.hourCost*+workPackage.hours + 1*+workPackage.extraCost}} </b></p>
+          </div>
+
+          <div class= "col-md-6">
+            <button class="btn btn-info pull-right" data-toggle="modal" data-target="#workPackageModal" (click)="setWorkPackage(sprint,workPackage, 'edit')">Editar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-success" style="margin:5px;" data-toggle="modal" data-target="#workPackageModal" (click)="getSprint(sprint, 'create' )">Agregar paquete de trabajo</button>
+  <div style = "margin-bottom: 5px;"></div>
+</div>
+<div [hidden]="isCreate">
+  <button class="btn btn-info pull-right" data-toggle="modal" data-target="#earnedValueModal">Calcular Earned value</button>
+</div>
+<div [hidden]="isSprintSelected"class="row" style="margin-top:100px">
+
+  <h3>EV para el sprint seleccionado</h3>
+  <p>Costo planeado:&#36; {{PC}}</p>
+  <p>Costo actual:&#36; {{AC}}</p>
+  <p>Horas planeadas:{{PH}}</p>
+  <p>Horas actuales:{{AH}}</p>
+
+  <table class="table table-striped table-hover ">
+    <thead>
+      <tr>
+        <th>Sprint</th>
+        <th>SV(Variación de calendario)</th>
+        <th>CV(Variación de costo)</th>
+        <th>SPI(Indice de rendimiento de calendario)</th>
+        <th>CPI(Indice de rendimiento de costo)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="active" *ngFor= "let ev of earnedValue">
+        <td>{{ev.name}}</td>
+        <td>{{ev.SV}}</td>
+        <td>{{ev.CV}}</td>
+        <td [ngClass]="isGreen(ev.SPI)? 'rangoVerde': isYellow(ev.SPI) ? 'rangoAmarillo' : 'rangoRojo'">{{ev.SPI | number : '1.2-2'}}</td>
+        <td [ngClass]="isGreen(ev.CPI)? 'rangoVerde': isYellow(ev.CPI) ? 'rangoAmarillo' : 'rangoRojo'">{{ev.CPI | number : '1.2-2'}}</td>
+      </tr>
+      <tr class="active">
+        <td>Total</td>
+        <td>{{SV}}</td>
+        <td>{{CV}}</td>
+        <td [ngClass]="isGreen(SPI)? 'rangoVerde': isYellow(SPI) ? 'rangoAmarillo' : 'rangoRojo'">{{SPI | number : '1.2-2'}}</td>
+        <td [ngClass]="isGreen(CPI)? 'rangoVerde': isYellow(CPI) ? 'rangoAmarillo' : 'rangoRojo'">{{CPI | number : '1.2-2'}}</td>
+      </tr>
+
+    </tbody>
+
+  </table>
+</div>
+
+<!-- PROJECT MODAL -->
+<div id ="myModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Crear proyecto</h4>
+      </div>
+      <div class="modal-body">
+        <form name="project_form">
+          <div class="form-group">
+            <label class="control-label" for="focusedInput">Nombre del proyecto</label>
+            <input name ="projectName"[(ngModel)]="projectName" class="form-control" type="text" value="">
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="focusedInput">Cantidad de sprints</label>
+            <input name="cantSprints" class="form-control" [(ngModel)]="cantSprints"  type="text" value="">
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveProject()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- WorkPackage MODAL -->
+<div id ="workPackageModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Paquete de trabajo</h4>
+      </div>
+      <div class="modal-body">
+        <!-- MODAL BODY -->
+        <form class="form-horizontal">
+          <fieldset>
+            <!-- <legend>Legend</legend> -->
+            <div class="form-group">
+              <label  for="inputEmail" class="col-lg-2 control-label">Nombre</label>
+              <div class="col-lg-10">
+                <input [disabled]="!isCreatePackage" name ="workPackageName" type="text" class="form-control" id="inputEmail" placeholder="Paquete 1" [(ngModel)]="workPackage.name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-lg-2 control-label">Total de horas</label>
+              <div class="col-lg-10">
+                <input [disabled]="!isCreatePackage" name = "workPackageHours" type="text" class="form-control" id="inputEmail" placeholder="10" [(ngModel)]="workPackage.hours">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-lg-2 control-label">Costo por hora</label>
+              <div class="col-lg-10">
+                <input [disabled]="!isCreatePackage" name = "workPackageHourCost" type="text" class="form-control" id="inputEmail" placeholder="$10" [(ngModel)]="workPackage.hourCost">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-lg-2 control-label">Costos extras</label>
+              <div class="col-lg-10">
+                <input [disabled]="!isCreatePackage" name = "workPackageExtraCost" type="text" class="form-control" id="inputEmail" placeholder="$500" [(ngModel)]="workPackage.extraCost">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label  for="textArea" class="col-lg-2 control-label">Descripción</label>
+              <div class="col-lg-10">
+                <textarea name="workPackageDescription" [(ngModel)]="workPackage.description"[disabled]="!isCreatePackage" name="workPackageDescription" class="form-control" rows="3" id="textArea" placeholder="El proyecto se basa en el manejor del valor ganado y el control de riesgos" [(ngModel)]="workPackage.description"></textarea>
+              </div>
+            </div>
+
+            <hr>
+            <div class="form-group">
+              <label ngModelfor="inputEmail" class="col-lg-2 control-label">Horas actuales</label>
+              <div class="col-lg-10">
+                <input  name="workPackageActualHours" [(ngModel)]="workPackage.actualHours" [disabled]="isCreatePackage" type="text" class="form-control" id="inputEmail" placeholder="10">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail" class="col-lg-2 control-label">Costo por hora actual</label>
+              <div class="col-lg-10">
+                <input name="workPackageActualHourCost" [(ngModel)]="workPackage.actualHourCost" [disabled]="isCreatePackage" type="text" class="form-control" id="inputEmail" placeholder="$10">
+              </div>
+            </div>
+            <div class="form-group">
+              <label  for="inputEmail" class="col-lg-2 control-label">Costo extra actual</label>
+              <div class="col-lg-10">
+                <input name="workPackageActualExtraCost" [(ngModel)]="workPackage.actualExtraCost" [disabled]="isCreatePackage" type="text" class="form-control" id="inputEmail" placeholder="$500">
+              </div>
+            </div>
+
+          </fieldset>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <div class="alert alert-dismissible alert-warning">
+          <h4>Advertencia!</h4>
+          <p>Una vez ingresada la información no se puede modificar.</p>
+        </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary"  data-dismiss="modal" (click)="saveWorkPackage()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id ="earnedValueModal" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Seleccione un sprint<span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li *ngFor="let sprint of sprints"><a data-dismiss="modal" (click)="calculateEarnedValue(sprint.id)">{{sprint.name}}</a></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <div class="alert alert-dismissible alert-info">
+          <p>Al seleccionar un sprint el calculo del earnedvalue se realizara.</p>
+        </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

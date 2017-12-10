@@ -1,0 +1,91 @@
+<div class="container" style="margin: 5px 0">
+  <legend>{{nombre}}</legend>
+  <div class="panel panel-default">
+    <div class="panel-heading">Agregar riesgo</div>
+    <div class="row">
+      <form class="form-inline" role="form">
+        <div class="panel-body">
+          <fieldset>
+              <div class="form-group col-md-6">
+                <label for="inputEmail" class="sr-only">Riesgo</label>
+                <div class="">
+                  <input style ="width:100%" name="descripcion" type="text" class="form-control" id="inputEmail" placeholder="Riesgo" [ngModel]="riesgoTemp.descripcion" (ngModelChange)="riesgoTemp.descripcion=$event">
+                </div>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputEmail1" class="sr-only">Riesgo</label>
+                <div class="input-group">
+                    <input name="probabilidad" type="text" class="form-control" aria-describedby="basic-addon1" id="inputEmail1" placeholder="Probabilidad" [ngModel]="riesgoTemp.probabilidad" (ngModelChange)="riesgoTemp.probabilidad=$event">
+                    <span class="input-group-addon" id="basic-addon1">%</span>
+                </div>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputEmail2" class="sr-only">Riesgo</label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                  <input name="impacto" type="text" class="form-control" id="inputEmail2" placeholder="Impacto(1-5)" [ngModel]="riesgoTemp.impacto" (ngModelChange)="riesgoTemp.impacto=$event">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" (click)="agregarRiesgo()">Agregar</button>
+              <button class="btn btn-default" style="margin: 0 5px" data-toggle="modal" data-target="#config"><i class="fa fa-cog" aria-hidden="true"></i></button>
+          </fieldset>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+<table style="margin: 10px" class="table table-hover" [hidden]="!riesgos.length > 0">
+  <thead>
+    <tr>
+      <th class="col-md-6">Riesgo</th>
+      <th align="center" class="col-md-1">Probabilidad (%)</th>
+      <th align="center" class="col-md-1">Impacto</th>
+      <th align="center" class="col-md-1">Valor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let riesgo of riesgos; let i = index">
+      <td>{{riesgo.descripcion}}</td>
+      <td>{{riesgo.probabilidad}}</td>
+      <td>{{riesgo.impacto}}</td>
+      <td [ngClass]="enRangoVerde(i) ? 'rangoVerde': enRangoAmarillo(i) ? 'rangoAmarillo' : 'rangoRojo'">{{ riesgo.valor | number : '1.2-2'}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div id="config" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Configurar código de colores</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group col-md-4">
+          <label for="idVerde" class="form-label">Verde</label>
+          <input id="idVerde" type="text" class="form-control" placeholder="0.01 - {{ rangoVerde }}" [ngModel]="rangoVerde" (ngModelChange)="onChangeVerde($event)">
+        </div>
+        <div class="form-group col-md-4">
+          <label for="idAmarillo" class="form-label">Amarillo</label>
+          <input id="idAmarillo" type="text" class="form-control" value="{{ rangoAmarilloMin | number : '1.2-2'  }} - {{ rangoAmarilloMax | number : '1.2-2' }}" readonly>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="idRojo" class="form-label">Rojo</label>
+          <input id="idRojo" type="text" class="form-control" placeholder="{{ (rangoRojo + 0.01) }} - 4.95" [ngModel]="rangoRojo" (ngModelChange)="onChangeRojo($event)">
+        </div>
+
+        <p>Indicar los valores deseados para cada rango de colores:</p>
+        <p> - Para el rango verde indique el valor máximo deseado </p>
+        <p> - Para el rango rojo indique el rango mínimo deseado</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
