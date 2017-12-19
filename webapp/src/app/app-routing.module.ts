@@ -6,7 +6,7 @@ import { EarnedValueComponent }   from './earnedvalue.component';
 import { RiskMatrixComponent } from './riskMatrix.component'
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/earnedvalue', pathMatch: 'full' },
   { path: 'home',  component: HomeComponent },
   { path: 'earnedvalue',  component: EarnedValueComponent },
   { path: 'riskMatrix',  component: RiskMatrixComponent },

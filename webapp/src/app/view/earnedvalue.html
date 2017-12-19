@@ -1,6 +1,9 @@
 <button class="btn btn-default" style="margin:5px" data-toggle="modal" data-target="#myModal">Crear proyecto</button>
 
+<a class="btn btn-info" [routerLink]="['/riskMatrix']">Risk matrix</a>
+
 <legend>{{title}}</legend>
+
 
 <div *ngFor="let sprint of sprints" class="panel panel-primary">
   <div class="panel-heading">

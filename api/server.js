@@ -5,7 +5,7 @@ const routes = require('./routes');
 var mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://root:root@127.0.0.1:27017/earnedvalue');
+mongoose.connect('mongodb://@127.0.0.1:27017/earnedvalue');
 
 //  Connect all our routes to our application
 app.use(bodyParser.json());
