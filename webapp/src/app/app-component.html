@@ -2,28 +2,50 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+      <!--button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
-         <a class="navbar-brand" [routerLink]="['/earnedvalue']">Proyectos</a>
+      </button-->
+      <a class="navbar-brand" [routerLink]="['/earnedvalue']">Earned value</a>
 
     </div>
-    <div id="navbar" class="navbar-collapse collapse">
+    <!--div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <!--<li><a [routerLink]="['/earnedvalue']">Crear proyecto</a></li>-->
+        <li><a [routerLink]="['/earnedvalue']">Crear proyecto</a></li>
         <li><a [routerLink]="['/home']">ayuda</a></li>
       </ul>
-    </div><!--/.nav-collapse -->
+    </div></.nav-collapse -->
   </div>
 </nav>
-<div class="col-lg-12" style="padding-top: 40px">
-  <ul style="padding-top: 40px" class="list-group col-md-3">
-    <legend>Lista de proyectos</legend>
-    <li *ngFor='let project of projects'><a class="list-group-item" (click)="saveProjectId(project.id)" [routerLink]="['/earnedvalue']" [queryParams]="{ id: project.id }">{{project.name}}</a></li>
-  </ul>
+<div class="col-lg-12" style="padding-top: 60px">
+  <div class="row">
+	<h3 style="display: inline">Proyectos:</h3>
+	
+  </div>
+  <table class="table table-striped">
+	<thead class="thead-dark">
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Proyecto</th>
+			<th scope="col">Descripción</th>
+			<th scope="col">Sprints</th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let project of projects; let i = index" [attr.data-index]="i">
+			<th scope="row">{{i + 1}}</th>
+			<td scope="row">{{project.name}}</td>
+			<td scope="row">{{project.description}}</td>
+			<td scope="row">{{project.cantSprints}}</td>
+			<td scope="row">
+				<button *ngIf="project.cantSprints > 0" type="button" class="btn btn-sm"><a (click)="saveProjectId(project.id)" [routerLink]="['/earnedvalue']" [queryParams]="{ id: project.id }">Ver</a></button>
+			</td>
+		</tr>
+	</tbody>
+  </table>
 </div>
 
 <div style="padding-top:10px">

@@ -40,6 +40,8 @@ import { Subject } from 'rxjs/Subject';
 		title : "";
 		projectName : "";
 		cantSprints : "";
+		description: "";
+		budget: "";
 		sprints : Sprint[];
 		sprint : Sprint;
 		isOpen : false;
@@ -111,7 +113,8 @@ import { Subject } from 'rxjs/Subject';
 			}
 
 			saveProject(){
-				var body = { project:{name:this.projectName,cantSprints:this.cantSprints}};
+				
+				var body = { project:{name:this.projectName,cantSprints:this.cantSprints,description:this.description,budget:this.budget}};
 				this.cleanProjectAttributes();
 
 				this.http.post(`${this.baseUrl}/saveProject`, body, { headers: this.getHeaders() })
@@ -120,6 +123,7 @@ import { Subject } from 'rxjs/Subject';
 					data => {
 						this.title = data.name;
 						this.setSprints(data.cantSprints, data.id);
+						window.location.reload();
 					},
 					err => this.logError(err),
 
@@ -185,6 +189,8 @@ import { Subject } from 'rxjs/Subject';
 				private cleanProjectAttributes (){
 					this.projectName = "";
 					this.cantSprints = "";
+					this.description = "";
+					this.budget = "";
 				}
 
 				private getHeaders() {

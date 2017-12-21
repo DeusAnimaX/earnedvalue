@@ -1,5 +1,5 @@
 <div class="container" style="margin: 5px 0">
-  <legend>{{nombre}}</legend>
+  <legend>Riesgos proyecto: {{nombre}}</legend>
   <div class="panel panel-default">
     <div class="panel-heading">Agregar riesgo</div>
     <div class="row">
@@ -9,13 +9,13 @@
               <div class="form-group col-md-6">
                 <label for="inputEmail" class="sr-only">Riesgo</label>
                 <div class="">
-                  <input style ="width:100%" name="descripcion" type="text" class="form-control" id="inputEmail" placeholder="Riesgo" [ngModel]="riesgoTemp.descripcion" (ngModelChange)="riesgoTemp.descripcion=$event">
+                  <input style ="width:100%" required name="descripcion" type="text" class="form-control" id="inputEmail" placeholder="Riesgo" [ngModel]="riesgoTemp.descripcion" (ngModelChange)="riesgoTemp.descripcion=$event">
                 </div>
               </div>
               <div class="form-group col-md-2">
                 <label for="inputEmail1" class="sr-only">Riesgo</label>
                 <div class="input-group">
-                    <input name="probabilidad" type="text" class="form-control" aria-describedby="basic-addon1" id="inputEmail1" placeholder="Probabilidad" [ngModel]="riesgoTemp.probabilidad" (ngModelChange)="riesgoTemp.probabilidad=$event">
+                    <input name="probabilidad" required type="number" min="0" max="100" class="form-control" aria-describedby="basic-addon1" id="inputEmail1" placeholder="Probabilidad" [ngModel]="riesgoTemp.probabilidad" (ngModelChange)="riesgoTemp.probabilidad=$event">
                     <span class="input-group-addon" id="basic-addon1">%</span>
                 </div>
               </div>
@@ -23,10 +23,10 @@
                 <label for="inputEmail2" class="sr-only">Riesgo</label>
                 <div class="input-group">
                   <div class="input-group-addon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
-                  <input name="impacto" type="text" class="form-control" id="inputEmail2" placeholder="Impacto(1-5)" [ngModel]="riesgoTemp.impacto" (ngModelChange)="riesgoTemp.impacto=$event">
+                  <input name="impacto" type="number" min="0" max="5" required class="form-control" id="inputEmail2" placeholder="Impacto(1-5)" [ngModel]="riesgoTemp.impacto" (ngModelChange)="riesgoTemp.impacto=$event">
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary" (click)="agregarRiesgo()">Agregar</button>
+              <button type="submit" class="btn btn-success" (click)="agregarRiesgo()" [disabled]="(riesgoTemp.descripcion === '' || riesgoTemp.probabilidad === '' || riesgoTemp.impacto === '')">Agregar</button>
               <button class="btn btn-default" style="margin: 0 5px" data-toggle="modal" data-target="#config"><i class="fa fa-cog" aria-hidden="true"></i></button>
           </fieldset>
         </div>
@@ -67,7 +67,7 @@
 
         <div class="form-group col-md-4">
           <label for="idVerde" class="form-label">Verde</label>
-          <input id="idVerde" type="text" class="form-control" placeholder="0.01 - {{ rangoVerde }}" [ngModel]="rangoVerde" (ngModelChange)="onChangeVerde($event)">
+          <input id="idVerde" type="number" min="0" max="2" class="form-control" placeholder="0.01 - {{ rangoVerde }}" [ngModel]="rangoVerde" (ngModelChange)="onChangeVerde($event)">
         </div>
         <div class="form-group col-md-4">
           <label for="idAmarillo" class="form-label">Amarillo</label>
@@ -75,7 +75,7 @@
         </div>
         <div class="form-group col-md-4">
           <label for="idRojo" class="form-label">Rojo</label>
-          <input id="idRojo" type="text" class="form-control" placeholder="{{ (rangoRojo + 0.01) }} - 4.95" [ngModel]="rangoRojo" (ngModelChange)="onChangeRojo($event)">
+          <input id="idRojo" type="number"min="3" max="5" class="form-control" placeholder="{{ (rangoRojo + 0.01) }} - 4.95" [ngModel]="rangoRojo" (ngModelChange)="onChangeRojo($event)">
         </div>
 
         <p>Indicar los valores deseados para cada rango de colores:</p>

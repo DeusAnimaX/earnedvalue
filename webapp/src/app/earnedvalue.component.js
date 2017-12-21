@@ -70,13 +70,14 @@ var EarnedValueComponent = (function () {
     };
     EarnedValueComponent.prototype.saveProject = function () {
         var _this = this;
-        var body = { project: { name: this.projectName, cantSprints: this.cantSprints } };
+        var body = { project: { name: this.projectName, cantSprints: this.cantSprints, description: this.description, budget: this.budget } };
         this.cleanProjectAttributes();
         this.http.post(this.baseUrl + "/saveProject", body, { headers: this.getHeaders() })
             .map(function (res) { return res.json(); })
             .subscribe(function (data) {
             _this.title = data.name;
             _this.setSprints(data.cantSprints, data.id);
+			window.location.reload();
         }, function (err) { return _this.logError(err); });
         //el post le retorna el id del proyecto y despues se lo manda a los sprints
     };
@@ -125,6 +126,8 @@ var EarnedValueComponent = (function () {
     EarnedValueComponent.prototype.cleanProjectAttributes = function () {
         this.projectName = "";
         this.cantSprints = "";
+		this.description = "";
+		this.budget = "";
     };
     EarnedValueComponent.prototype.getHeaders = function () {
         var headers = new http_1.Headers();
