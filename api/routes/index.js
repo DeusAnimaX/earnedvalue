@@ -11,7 +11,8 @@ routes.post('/saveProject', (req, res) => {
   var project = new Project ({
     name: req.body.project.name,
     id: req.body.project.name + '_ID',
-    cantSprints: req.body.project.cantSprints
+    cantSprints: req.body.project.cantSprints,
+	budget: req.body.project.budget
   });
   project.save(function(err) {
     if (err) throw err;
@@ -46,6 +47,14 @@ routes.post('/getProject', (req,res)=>{
   });
 });
 
+routes.delete('/deleteProject/:id', (req,res)=>{
+
+  Project.remove({'_id':req.params.id}, function(err, project){
+    if (err)
+        res.send(err);
+    res.json(project);
+  });
+});
 
 //SPRINTS API
 routes.post('/saveSprints', (req, res) => {
