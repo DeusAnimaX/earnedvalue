@@ -83,6 +83,16 @@ export class RiskMatrixComponent {
   };
 
   public agregarRiesgo(){
+	  
+		if (this.riesgoTemp.descripcion === '')
+		  return;
+		
+		if (this.riesgoTemp.impacto < 0 || this.riesgoTemp.impacto > 5)
+		  return;
+		  
+		 if (this.riesgoTemp.probabilidad < 0 || this.riesgoTemp.probabilidad > 100)
+		  return;
+	  
     this.riesgoTemp.valor = (((+this.riesgoTemp.probabilidad / 100 ) * +this.riesgoTemp.impacto)).toString();
     let riesgo = new Risk(this.riesgoTemp.descripcion,Number(this.riesgoTemp.probabilidad),Number(this.riesgoTemp.impacto), Number(this.riesgoTemp.valor));
     riesgo.idMatrix = this.matrix.id;

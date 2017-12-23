@@ -52,6 +52,15 @@ var RiskMatrixComponent = (function () {
     ;
     RiskMatrixComponent.prototype.agregarRiesgo = function () {
         var _this = this;
+		if (_this.riesgoTemp.descripcion === '')
+		  return;
+		
+		if (_this.riesgoTemp.impacto < 0 || _this.riesgoTemp.impacto > 5)
+		  return;
+		  
+		 if (_this.riesgoTemp.probabilidad < 0 || _this.riesgoTemp.probabilidad > 100)
+		  return;
+		
         this.riesgoTemp.valor = (((+this.riesgoTemp.probabilidad / 100) * +this.riesgoTemp.impacto)).toString();
         var riesgo = new risk_1.Risk(this.riesgoTemp.descripcion, Number(this.riesgoTemp.probabilidad), Number(this.riesgoTemp.impacto), Number(this.riesgoTemp.valor));
         riesgo.idMatrix = this.matrix.id;

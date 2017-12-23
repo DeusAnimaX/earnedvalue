@@ -113,6 +113,14 @@ import { Subject } from 'rxjs/Subject';
 			}
 
 			saveProject(){
+				if (this.cantSprints <= 0)
+					return;
+				
+				if (this.projectName === '')
+					return;
+				
+				if (this.budget < 0)
+					return;
 				
 				var body = { project:{name:this.projectName,cantSprints:this.cantSprints,description:this.description,budget:this.budget}};
 				this.cleanProjectAttributes();
@@ -156,6 +164,28 @@ import { Subject } from 'rxjs/Subject';
 			//Se hace separado ya que al ser un observable cold se suscribe dos veces
 			saveWorkPackage (){
 				this.isCreate = false;
+				
+				if (this.workPackage.hours < 0)
+					return;
+				
+				if (this.workPackage.hourCost < 0)
+					return;
+				
+				if (this.workPackage.actualHours < 0)
+					return;
+				
+				if (this.workPackage.actualHourCost < 0)
+					return;
+				
+				if (this.workPackage.actualHourCost < 0)
+					return;
+				
+				if (this.workPackage.actualExtraCost < 0)
+					return;
+				
+				if (this.workPackage.name === '')
+					return;
+				
 				var workPackage = {
 					id: this.workPackage.id,
 					idSprint:this.sprint.id,

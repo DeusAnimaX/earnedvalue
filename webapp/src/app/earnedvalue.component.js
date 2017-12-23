@@ -70,6 +70,14 @@ var EarnedValueComponent = (function () {
     };
     EarnedValueComponent.prototype.saveProject = function () {
         var _this = this;
+		if (_this.cantSprints <= 0)
+			return;
+		
+		if (_this.projectName)
+			return;
+		
+		if (_this.budget < 0)
+			return;
         var body = { project: { name: this.projectName, cantSprints: this.cantSprints, description: this.description, budget: this.budget } };
         this.cleanProjectAttributes();
         this.http.post(this.baseUrl + "/saveProject", body, { headers: this.getHeaders() })
@@ -100,6 +108,29 @@ var EarnedValueComponent = (function () {
     //Se hace separado ya que al ser un observable cold se suscribe dos veces
     EarnedValueComponent.prototype.saveWorkPackage = function () {
         var _this = this;
+		
+		if (_this.workPackage.hours < 0)
+			return;
+		
+		if (_this.workPackage.hourCost < 0)
+			return;
+		
+		if (_this.workPackage.actualHours < 0)
+			return;
+		
+		if (_this.workPackage.actualHourCost < 0)
+			return;
+		
+		if (_this.workPackage.actualHourCost < 0)
+			return;
+		
+		if (_this.workPackage.actualExtraCost < 0)
+			return;
+		
+		if (_this.workPackage.name === '')
+			return;
+		
+		
         this.isCreate = false;
         var workPackage = {
             id: this.workPackage.id,
